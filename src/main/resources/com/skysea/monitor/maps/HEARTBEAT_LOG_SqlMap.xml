@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skysea.monitor.domain.HeartbeatLog" >
+
+	<resultMap id="heartbeatLogResultForList" type="com.skysea.monitor.domain.HeartbeatLog">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="instance_id" property="instanceId" jdbcType="INTEGER" />
+		<result column="conn_time" property="connTime" jdbcType="INTEGER" />
+		<result column="is_conn" property="isConn" jdbcType="INTEGER" />
+		<result column="received_size" property="receivedSize" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="heartbeatLogResult" type="com.skysea.monitor.domain.HeartbeatLog" extends="heartbeatLogResultForList">
+	</resultMap>
+
+	<sql id="sf-heartbeatLog">
+			<if test="id != null" > and id = #{id,jdbcType=INTEGER}</if>
+			<if test="instanceId != null" > and instance_id = #{instanceId,jdbcType=INTEGER}</if>
+			<if test="connTime != null" > and conn_time = #{connTime,jdbcType=INTEGER}</if>
+			<if test="isConn != null" > and is_conn = #{isConn,jdbcType=INTEGER}</if>
+			<if test="receivedSize != null" > and received_size = #{receivedSize,jdbcType=INTEGER}</if>
+			<if test="createTime != null" > and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+	</sql>
+
+	<select id="select" resultMap="heartbeatLogResult" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		select * from heartbeat_log where 1 = 1
+		<include refid="sf-heartbeatLog" />
+	</select>
+
+	<select id="selectList" resultMap="heartbeatLogResultForList" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		select * from heartbeat_log
+		<where>
+			<include refid="sf-heartbeatLog" />
+		</where>
+		<!-- order by ID asc -->
+		<if test="pager != null and pager.rows != null" >
+			<![CDATA[ limit 0,#{pager.rows}]]>
+		</if>
+	</select>
+
+	<select id="selectCount" resultType="int" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		select count(*) from heartbeat_log 
+		<where>
+			<include refid="sf-heartbeatLog" />
+		</where>
+	</select>
+
+	<select id="selectPageList" resultMap="heartbeatLogResult" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		select * from heartbeat_log 
+		<where>
+			<include refid="sf-heartbeatLog" />
+		</where>
+		<!-- order by ID asc -->
+		<![CDATA[ limit #{pager.first},#{pager.rows}]]>
+	</select>
+
+	<insert id="insert" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		<![CDATA[insert into heartbeat_log]]>
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >id,</if>
+			 <if test="instanceId != null" >instance_id,</if>
+			 <if test="connTime != null" >conn_time,</if>
+			 <if test="isConn != null" >is_conn,</if>
+			 <if test="receivedSize != null" >received_size,</if>
+			 <if test="createTime != null" >create_time,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >#{id,jdbcType=INTEGER},</if>
+			 <if test="instanceId != null" >#{instanceId,jdbcType=INTEGER},</if>
+			 <if test="connTime != null" >#{connTime,jdbcType=INTEGER},</if>
+			 <if test="isConn != null" >#{isConn,jdbcType=INTEGER},</if>
+			 <if test="receivedSize != null" >#{receivedSize,jdbcType=INTEGER},</if>
+			 <if test="createTime != null" >#{createTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		update heartbeat_log
+		<trim prefix="SET" suffixOverrides=",">  
+			<if test="id != null" >id = #{id,jdbcType=INTEGER},</if>
+			<if test="instanceId != null" >instance_id = #{instanceId,jdbcType=INTEGER},</if>
+			<if test="connTime != null" >conn_time = #{connTime,jdbcType=INTEGER},</if>
+			<if test="isConn != null" >is_conn = #{isConn,jdbcType=INTEGER},</if>
+			<if test="receivedSize != null" >received_size = #{receivedSize,jdbcType=INTEGER},</if>
+			<if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					 <foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</update>
+
+	<delete id="delete" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+		delete from heartbeat_log
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					<foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="insertBatch" parameterType="java.util.List">
+		<![CDATA[insert into heartbeat_log]]>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				id,
+				instance_id,
+				conn_time,
+				is_conn,
+				received_size,
+				create_time,
+		</trim>
+		values
+		 <foreach collection ="list" item ="item" index ="index" separator =",">
+		   (
+			 #{item.id,jdbcType=INTEGER},
+			 #{item.instanceId,jdbcType=INTEGER},
+			 #{item.connTime,jdbcType=INTEGER},
+			 #{item.isConn,jdbcType=INTEGER},
+			 #{item.receivedSize,jdbcType=INTEGER},
+			 #{item.createTime,jdbcType=TIMESTAMP}
+		   )
+	     </foreach >
+	</update>
+
+</mapper>

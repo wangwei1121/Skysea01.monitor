@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skysea.monitor.domain.UserInfo" >
+
+	<resultMap id="userInfoResultForList" type="com.skysea.monitor.domain.UserInfo">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="userInfoResult" type="com.skysea.monitor.domain.UserInfo" extends="userInfoResultForList">
+	</resultMap>
+
+	<sql id="sf-userInfo">
+			<if test="id != null" > and id = #{id,jdbcType=INTEGER}</if>
+			<if test="userName != null" > and user_name = #{userName,jdbcType=VARCHAR}</if>
+			<if test="password != null" > and password = #{password,jdbcType=VARCHAR}</if>
+			<if test="email != null" > and email = #{email,jdbcType=VARCHAR}</if>
+			<if test="createTime != null" > and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+			<if test="updateTime != null" > and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+	</sql>
+
+	<select id="select" resultMap="userInfoResult" parameterType="com.skysea.monitor.domain.UserInfo">
+		select * from user_info where 1 = 1
+		<include refid="sf-userInfo" />
+	</select>
+
+	<select id="selectList" resultMap="userInfoResultForList" parameterType="com.skysea.monitor.domain.UserInfo">
+		select * from user_info
+		<where>
+			<include refid="sf-userInfo" />
+		</where>
+		<!-- order by ID asc -->
+		<if test="pager != null and pager.rows != null" >
+			<![CDATA[ limit 0,#{pager.rows}]]>
+		</if>
+	</select>
+
+	<select id="selectCount" resultType="int" parameterType="com.skysea.monitor.domain.UserInfo">
+		select count(*) from user_info 
+		<where>
+			<include refid="sf-userInfo" />
+		</where>
+	</select>
+
+	<select id="selectPageList" resultMap="userInfoResult" parameterType="com.skysea.monitor.domain.UserInfo">
+		select * from user_info 
+		<where>
+			<include refid="sf-userInfo" />
+		</where>
+		<!-- order by ID asc -->
+		<![CDATA[ limit #{pager.first},#{pager.rows}]]>
+	</select>
+
+	<insert id="insert" parameterType="com.skysea.monitor.domain.UserInfo">
+		<![CDATA[insert into user_info]]>
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >id,</if>
+			 <if test="userName != null" >user_name,</if>
+			 <if test="password != null" >password,</if>
+			 <if test="email != null" >email,</if>
+			 <if test="createTime != null" >create_time,</if>
+			 <if test="updateTime != null" >update_time,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >#{id,jdbcType=INTEGER},</if>
+			 <if test="userName != null" >#{userName,jdbcType=VARCHAR},</if>
+			 <if test="password != null" >#{password,jdbcType=VARCHAR},</if>
+			 <if test="email != null" >#{email,jdbcType=VARCHAR},</if>
+			 <if test="createTime != null" >#{createTime,jdbcType=TIMESTAMP},</if>
+			 <if test="updateTime != null" >#{updateTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.skysea.monitor.domain.UserInfo">
+		update user_info
+		<trim prefix="SET" suffixOverrides=",">  
+			<if test="id != null" >id = #{id,jdbcType=INTEGER},</if>
+			<if test="userName != null" >user_name = #{userName,jdbcType=VARCHAR},</if>
+			<if test="password != null" >password = #{password,jdbcType=VARCHAR},</if>
+			<if test="email != null" >email = #{email,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null" >update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					 <foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</update>
+
+	<delete id="delete" parameterType="com.skysea.monitor.domain.UserInfo">
+		delete from user_info
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					<foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="insertBatch" parameterType="java.util.List">
+		<![CDATA[insert into user_info]]>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				id,
+				user_name,
+				password,
+				email,
+				create_time,
+				update_time,
+		</trim>
+		values
+		 <foreach collection ="list" item ="item" index ="index" separator =",">
+		   (
+			 #{item.id,jdbcType=INTEGER},
+			 #{item.userName,jdbcType=VARCHAR},
+			 #{item.password,jdbcType=VARCHAR},
+			 #{item.email,jdbcType=VARCHAR},
+			 #{item.createTime,jdbcType=TIMESTAMP},
+			 #{item.updateTime,jdbcType=TIMESTAMP}
+		   )
+	     </foreach >
+	</update>
+
+</mapper>
