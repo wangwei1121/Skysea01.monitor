@@ -4,7 +4,7 @@
 
 	<resultMap id="heartbeatLogResultForList" type="com.skysea.monitor.domain.HeartbeatLog">
 		<result column="id" property="id" jdbcType="INTEGER" />
-		<result column="instance_id" property="instanceId" jdbcType="INTEGER" />
+		<result column="app_instance_id" property="appInstanceId" jdbcType="INTEGER" />
 		<result column="conn_time" property="connTime" jdbcType="INTEGER" />
 		<result column="is_conn" property="isConn" jdbcType="INTEGER" />
 		<result column="received_size" property="receivedSize" jdbcType="INTEGER" />
@@ -16,7 +16,7 @@
 
 	<sql id="sf-heartbeatLog">
 			<if test="id != null" > and id = #{id,jdbcType=INTEGER}</if>
-			<if test="instanceId != null" > and instance_id = #{instanceId,jdbcType=INTEGER}</if>
+			<if test="appInstanceId != null" > and app_instance_id = #{appInstanceId,jdbcType=INTEGER}</if>
 			<if test="connTime != null" > and conn_time = #{connTime,jdbcType=INTEGER}</if>
 			<if test="isConn != null" > and is_conn = #{isConn,jdbcType=INTEGER}</if>
 			<if test="receivedSize != null" > and received_size = #{receivedSize,jdbcType=INTEGER}</if>
@@ -33,7 +33,7 @@
 		<where>
 			<include refid="sf-heartbeatLog" />
 		</where>
-		<!-- order by ID asc -->
+		order by id desc
 		<if test="pager != null and pager.rows != null" >
 			<![CDATA[ limit 0,#{pager.rows}]]>
 		</if>
@@ -55,11 +55,11 @@
 		<![CDATA[ limit #{pager.first},#{pager.rows}]]>
 	</select>
 
-	<insert id="insert" parameterType="com.skysea.monitor.domain.HeartbeatLog">
+	<insert id="insert" parameterType="com.skysea.monitor.domain.HeartbeatLog" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[insert into heartbeat_log]]>
 		 <trim prefix="(" suffix=")" suffixOverrides="," >
 			 <if test="id != null" >id,</if>
-			 <if test="instanceId != null" >instance_id,</if>
+			 <if test="appInstanceId != null" >app_instance_id,</if>
 			 <if test="connTime != null" >conn_time,</if>
 			 <if test="isConn != null" >is_conn,</if>
 			 <if test="receivedSize != null" >received_size,</if>
@@ -67,7 +67,7 @@
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			 <if test="id != null" >#{id,jdbcType=INTEGER},</if>
-			 <if test="instanceId != null" >#{instanceId,jdbcType=INTEGER},</if>
+			 <if test="appInstanceId != null" >#{appInstanceId,jdbcType=INTEGER},</if>
 			 <if test="connTime != null" >#{connTime,jdbcType=INTEGER},</if>
 			 <if test="isConn != null" >#{isConn,jdbcType=INTEGER},</if>
 			 <if test="receivedSize != null" >#{receivedSize,jdbcType=INTEGER},</if>
@@ -79,7 +79,7 @@
 		update heartbeat_log
 		<trim prefix="SET" suffixOverrides=",">  
 			<if test="id != null" >id = #{id,jdbcType=INTEGER},</if>
-			<if test="instanceId != null" >instance_id = #{instanceId,jdbcType=INTEGER},</if>
+			<if test="appInstanceId != null" >app_instance_id = #{appInstanceId,jdbcType=INTEGER},</if>
 			<if test="connTime != null" >conn_time = #{connTime,jdbcType=INTEGER},</if>
 			<if test="isConn != null" >is_conn = #{isConn,jdbcType=INTEGER},</if>
 			<if test="receivedSize != null" >received_size = #{receivedSize,jdbcType=INTEGER},</if>
@@ -113,7 +113,7 @@
 		<![CDATA[insert into heartbeat_log]]>
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 				id,
-				instance_id,
+				app_instance_id,
 				conn_time,
 				is_conn,
 				received_size,
@@ -123,7 +123,7 @@
 		 <foreach collection ="list" item ="item" index ="index" separator =",">
 		   (
 			 #{item.id,jdbcType=INTEGER},
-			 #{item.instanceId,jdbcType=INTEGER},
+			 #{item.appInstanceId,jdbcType=INTEGER},
 			 #{item.connTime,jdbcType=INTEGER},
 			 #{item.isConn,jdbcType=INTEGER},
 			 #{item.receivedSize,jdbcType=INTEGER},

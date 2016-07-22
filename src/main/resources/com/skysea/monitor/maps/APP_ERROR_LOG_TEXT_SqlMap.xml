@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skysea.monitor.domain.AppErrorLogText" >
+
+	<resultMap id="appErrorLogTextResultForList" type="com.skysea.monitor.domain.AppErrorLogText">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="error_log_id" property="errorLogId" jdbcType="INTEGER" />
+		<result column="context" property="context" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+	<resultMap id="appErrorLogTextResult" type="com.skysea.monitor.domain.AppErrorLogText" extends="appErrorLogTextResultForList">
+	</resultMap>
+
+	<sql id="sf-appErrorLogText">
+			<if test="id != null" > and id = #{id,jdbcType=INTEGER}</if>
+			<if test="errorLogId != null" > and error_log_id = #{errorLogId,jdbcType=INTEGER}</if>
+			<if test="context != null" > and context = #{context,jdbcType=LONGVARCHAR}</if>
+	</sql>
+
+	<select id="select" resultMap="appErrorLogTextResult" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		select * from app_error_log_text where 1 = 1
+		<include refid="sf-appErrorLogText" />
+	</select>
+
+	<select id="selectList" resultMap="appErrorLogTextResultForList" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		select * from app_error_log_text
+		<where>
+			<include refid="sf-appErrorLogText" />
+		</where>
+		<!-- order by ID asc -->
+		<if test="pager != null and pager.rows != null" >
+			<![CDATA[ limit 0,#{pager.rows}]]>
+		</if>
+	</select>
+
+	<select id="selectCount" resultType="int" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		select count(*) from app_error_log_text 
+		<where>
+			<include refid="sf-appErrorLogText" />
+		</where>
+	</select>
+
+	<select id="selectPageList" resultMap="appErrorLogTextResult" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		select * from app_error_log_text 
+		<where>
+			<include refid="sf-appErrorLogText" />
+		</where>
+		<!-- order by ID asc -->
+		<![CDATA[ limit #{pager.first},#{pager.rows}]]>
+	</select>
+
+	<insert id="insert" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		<![CDATA[insert into app_error_log_text]]>
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >id,</if>
+			 <if test="errorLogId != null" >error_log_id,</if>
+			 <if test="context != null" >context,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >#{id,jdbcType=INTEGER},</if>
+			 <if test="errorLogId != null" >#{errorLogId,jdbcType=INTEGER},</if>
+			 <if test="context != null" >#{context,jdbcType=LONGVARCHAR},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		update app_error_log_text
+		<trim prefix="SET" suffixOverrides=",">  
+			<if test="id != null" >id = #{id,jdbcType=INTEGER},</if>
+			<if test="errorLogId != null" >error_log_id = #{errorLogId,jdbcType=INTEGER},</if>
+			<if test="context != null" >context = #{context,jdbcType=LONGVARCHAR},</if>
+		</trim>
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					 <foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</update>
+
+	<delete id="delete" parameterType="com.skysea.monitor.domain.AppErrorLogText">
+		delete from app_error_log_text
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					<foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="insertBatch" parameterType="java.util.List">
+		<![CDATA[insert into app_error_log_text]]>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				id,
+				error_log_id,
+				context,
+		</trim>
+		values
+		 <foreach collection ="list" item ="item" index ="index" separator =",">
+		   (
+			 #{item.id,jdbcType=INTEGER},
+			 #{item.errorLogId,jdbcType=INTEGER},
+			 #{item.context,jdbcType=LONGVARCHAR}
+		   )
+	     </foreach >
+	</update>
+
+</mapper>

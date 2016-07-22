@@ -188,15 +188,16 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-core</artifactId>
-		    <version>5.7.0</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-pool</artifactId>
-		    <version>5.13.3</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.5.2</version>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skysea.monitor.domain.MonitorApp" >
+
+	<resultMap id="monitorAppResultForList" type="com.skysea.monitor.domain.MonitorApp">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="port" property="port" jdbcType="VARCHAR" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="monitorAppResult" type="com.skysea.monitor.domain.MonitorApp" extends="monitorAppResultForList">
+	</resultMap>
+
+	<sql id="sf-monitorApp">
+			<if test="id != null" > and id = #{id,jdbcType=INTEGER}</if>
+			<if test="name != null" > and name = #{name,jdbcType=VARCHAR}</if>
+			<if test="ip != null" > and ip = #{ip,jdbcType=VARCHAR}</if>
+			<if test="port != null" > and port = #{port,jdbcType=VARCHAR}</if>
+			<if test="appName != null" > and app_name = #{appName,jdbcType=VARCHAR}</if>
+			<if test="updateTime != null" > and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+			<if test="createTime != null" > and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+	</sql>
+
+	<select id="select" resultMap="monitorAppResult" parameterType="com.skysea.monitor.domain.MonitorApp">
+		select * from monitor_app where 1 = 1
+		<include refid="sf-monitorApp" />
+	</select>
+
+	<select id="selectList" resultMap="monitorAppResultForList" parameterType="com.skysea.monitor.domain.MonitorApp">
+		select * from monitor_app
+		<where>
+			<include refid="sf-monitorApp" />
+		</where>
+		<!-- order by ID asc -->
+		<if test="pager != null and pager.rows != null" >
+			<![CDATA[ limit 0,#{pager.rows}]]>
+		</if>
+	</select>
+
+	<select id="selectCount" resultType="int" parameterType="com.skysea.monitor.domain.MonitorApp">
+		select count(*) from monitor_app 
+		<where>
+			<include refid="sf-monitorApp" />
+		</where>
+	</select>
+
+	<select id="selectPageList" resultMap="monitorAppResult" parameterType="com.skysea.monitor.domain.MonitorApp">
+		select * from monitor_app 
+		<where>
+			<include refid="sf-monitorApp" />
+		</where>
+		<!-- order by ID asc -->
+		<![CDATA[ limit #{pager.first},#{pager.rows}]]>
+	</select>
+
+	<insert id="insert" parameterType="com.skysea.monitor.domain.MonitorApp">
+		<![CDATA[insert into monitor_app]]>
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >id,</if>
+			 <if test="name != null" >name,</if>
+			 <if test="ip != null" >ip,</if>
+			 <if test="port != null" >port,</if>
+			 <if test="appName != null" >app_name,</if>
+			 <if test="updateTime != null" >update_time,</if>
+			 <if test="createTime != null" >create_time,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >#{id,jdbcType=INTEGER},</if>
+			 <if test="name != null" >#{name,jdbcType=VARCHAR},</if>
+			 <if test="ip != null" >#{ip,jdbcType=VARCHAR},</if>
+			 <if test="port != null" >#{port,jdbcType=VARCHAR},</if>
+			 <if test="appName != null" >#{appName,jdbcType=VARCHAR},</if>
+			 <if test="updateTime != null" >#{updateTime,jdbcType=TIMESTAMP},</if>
+			 <if test="createTime != null" >#{createTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.skysea.monitor.domain.MonitorApp">
+		update monitor_app
+		<trim prefix="SET" suffixOverrides=",">  
+			<if test="id != null" >id = #{id,jdbcType=INTEGER},</if>
+			<if test="name != null" >name = #{name,jdbcType=VARCHAR},</if>
+			<if test="ip != null" >ip = #{ip,jdbcType=VARCHAR},</if>
+			<if test="port != null" >port = #{port,jdbcType=VARCHAR},</if>
+			<if test="appName != null" >app_name = #{appName,jdbcType=VARCHAR},</if>
+			<if test="updateTime != null" >update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					 <foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</update>
+
+	<delete id="delete" parameterType="com.skysea.monitor.domain.MonitorApp">
+		delete from monitor_app
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					<foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="insertBatch" parameterType="java.util.List">
+		<![CDATA[insert into monitor_app]]>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				id,
+				name,
+				ip,
+				port,
+				app_name,
+				update_time,
+				create_time,
+		</trim>
+		values
+		 <foreach collection ="list" item ="item" index ="index" separator =",">
+		   (
+			 #{item.id,jdbcType=INTEGER},
+			 #{item.name,jdbcType=VARCHAR},
+			 #{item.ip,jdbcType=VARCHAR},
+			 #{item.port,jdbcType=VARCHAR},
+			 #{item.appName,jdbcType=VARCHAR},
+			 #{item.updateTime,jdbcType=TIMESTAMP},
+			 #{item.createTime,jdbcType=TIMESTAMP}
+		   )
+	     </foreach >
+	</update>
+
+</mapper>

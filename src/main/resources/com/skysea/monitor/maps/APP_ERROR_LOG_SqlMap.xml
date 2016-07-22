@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skysea.monitor.domain.AppErrorLog" >
+
+	<resultMap id="appErrorLogResultForList" type="com.skysea.monitor.domain.AppErrorLog">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="monitor_app_id" property="monitorAppId" jdbcType="INTEGER" />
+		<result column="log" property="log" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="appErrorLogResult" type="com.skysea.monitor.domain.AppErrorLog" extends="appErrorLogResultForList">
+	</resultMap>
+
+	<sql id="sf-appErrorLog">
+			<if test="id != null" > and id = #{id,jdbcType=INTEGER}</if>
+			<if test="monitorAppId != null" > and monitor_app_id = #{monitorAppId,jdbcType=INTEGER}</if>
+			<if test="log != null" > and log = #{log,jdbcType=VARCHAR}</if>
+			<if test="createTime != null" > and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+	</sql>
+
+	<select id="select" resultMap="appErrorLogResult" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		select * from app_error_log where 1 = 1
+		<include refid="sf-appErrorLog" />
+	</select>
+
+	<select id="selectList" resultMap="appErrorLogResultForList" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		select * from app_error_log
+		<where>
+			<include refid="sf-appErrorLog" />
+		</where>
+		<!-- order by ID asc -->
+		<if test="pager != null and pager.rows != null" >
+			<![CDATA[ limit 0,#{pager.rows}]]>
+		</if>
+	</select>
+
+	<select id="selectCount" resultType="int" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		select count(*) from app_error_log 
+		<where>
+			<include refid="sf-appErrorLog" />
+		</where>
+	</select>
+
+	<select id="selectPageList" resultMap="appErrorLogResult" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		select * from app_error_log 
+		<where>
+			<include refid="sf-appErrorLog" />
+		</where>
+		<!-- order by ID asc -->
+		<![CDATA[ limit #{pager.first},#{pager.rows}]]>
+	</select>
+
+	<insert id="insert" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		<![CDATA[insert into app_error_log]]>
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >id,</if>
+			 <if test="monitorAppId != null" >monitor_app_id,</if>
+			 <if test="log != null" >log,</if>
+			 <if test="createTime != null" >create_time,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			 <if test="id != null" >#{id,jdbcType=INTEGER},</if>
+			 <if test="monitorAppId != null" >#{monitorAppId,jdbcType=INTEGER},</if>
+			 <if test="log != null" >#{log,jdbcType=VARCHAR},</if>
+			 <if test="createTime != null" >#{createTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		update app_error_log
+		<trim prefix="SET" suffixOverrides=",">  
+			<if test="id != null" >id = #{id,jdbcType=INTEGER},</if>
+			<if test="monitorAppId != null" >monitor_app_id = #{monitorAppId,jdbcType=INTEGER},</if>
+			<if test="log != null" >log = #{log,jdbcType=VARCHAR},</if>
+			<if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+		</trim>
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					 <foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</update>
+
+	<delete id="delete" parameterType="com.skysea.monitor.domain.AppErrorLog">
+		delete from app_error_log
+		<where>
+			<if test="id != null" > and ID = #{id}</if>
+			<if test="id == null" > and 
+			  <if test="map.pks != null">
+					ID in
+					<foreach collection="map.pks" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="insertBatch" parameterType="java.util.List">
+		<![CDATA[insert into app_error_log]]>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				id,
+				monitor_app_id,
+				log,
+				create_time,
+		</trim>
+		values
+		 <foreach collection ="list" item ="item" index ="index" separator =",">
+		   (
+			 #{item.id,jdbcType=INTEGER},
+			 #{item.monitorAppId,jdbcType=INTEGER},
+			 #{item.log,jdbcType=VARCHAR},
+			 #{item.createTime,jdbcType=TIMESTAMP}
+		   )
+	     </foreach >
+	</update>
+
+</mapper>

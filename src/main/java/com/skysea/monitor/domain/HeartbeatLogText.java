@@ -10,7 +10,7 @@ public class HeartbeatLogText extends BaseDomain implements Serializable {
 
 	private Integer id;
 	
-	private Integer instanceLogId;
+	private Integer heartbeatLogId;
 	
 	private String receivedContent;
 	
@@ -26,12 +26,12 @@ public class HeartbeatLogText extends BaseDomain implements Serializable {
 		this.id = id;
 	}
 	
-	public Integer getInstanceLogId() {
-		return instanceLogId;
+	public Integer getHeartbeatLogId() {
+		return heartbeatLogId;
 	}
 	
-	public void setInstanceLogId(Integer instanceLogId) {
-		this.instanceLogId = instanceLogId;
+	public void setHeartbeatLogId(Integer heartbeatLogId) {
+		this.heartbeatLogId = heartbeatLogId;
 	}
 	
 	public String getReceivedContent() {

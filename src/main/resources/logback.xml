@@ -3,6 +3,11 @@
 
 	<!-- 控制台输出 -->
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY </onMismatch>
+		</filter>
 		<encoder>
 			<pattern>%date %-5level %logger{80} - %msg%n</pattern>
 		</encoder>
@@ -24,7 +29,7 @@
 		</encoder>
 	</appender>
 	
-	<appender name="socket" class="ch.qos.logback.classic.net.SocketAppender">
+	<!-- <appender name="socket" class="ch.qos.logback.classic.net.SocketAppender">
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
 			<level>ERROR</level>
 			<onMatch>ACCEPT</onMatch>
@@ -34,7 +39,7 @@
 	    <port>8899</port>
 	    <reconnectionDelay>10000</reconnectionDelay>
 	    <includeCallerData>true</includeCallerData>
- 	 </appender>
+ 	 </appender> -->
 
 	<logger name="com.alibaba.druid" level="DEBUG"/>
 	<logger name="java.sql.Connection" level="DEBUG"/>
